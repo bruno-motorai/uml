@@ -1,0 +1,61 @@
+@startuml "ADS fault"
+skinparam ConditionEndStyle hline
+title Elevated risk situations workflow
+
+
+:Vehicle with a fault;
+
+floating note right
+User(s): Techincal supervisor(s)
+MRM: Minimum risk maneuver
+MRC: Minimum risk condition
+end note
+
+:Notify system users;
+
+if (Request active supervision from TS) equals (approved) then
+
+    :Initial diagnose based on extensive 
+    real-time vehicle data;
+    note left
+        Car state
+        Sensor stream
+        Context data
+        Historic data
+    end note
+
+    while(Continuous data analysis.\n Vehicle suitable for MRC?) is (no)
+        if (MRM required) equals (yes) then
+            :Choose maneuver from 
+            suggestions or propose one;
+            :Approve and perform MRM;
+
+            if(MRM succesful) equals (yes) then
+                break
+            else (no)
+            endif
+
+        else (no)
+            :Issue commands and
+            perform changes;
+        endif
+
+    endwhile (yes)
+
+    :Confirm MRC;
+    :Vehicle in MRC;
+    :End supervision;
+
+else (not approved)
+
+    :Vehicle performs MRM autonomously;
+    if(MRM succesful) equals (yes) then
+        :Vehicle in MRC;
+        :Notify system users;
+    else (no)
+        end
+    endif
+
+endif
+stop
+@enduml
