@@ -1,0 +1,43 @@
+@startuml "ADS fault"
+skinparam ConditionEndStyle hline
+title ADS fault workflow
+
+:Vehicle with a fault;
+
+:Notify system users;
+
+if (Request active supervision from TS) equals (approved) then
+
+    :Diagnose based on in depth vehicle data;
+
+    while(Vehicle suitable for MRC) is (no)
+        :Prepare changes;
+        if (MRM Required) equals (yes) then
+            :Approve and perform MRM;
+
+            if(MRM succesful) equals (yes) then
+                break
+            else (no)
+            endif
+
+        else (no)
+            :Issue commands in car;
+        endif
+
+    endwhile (yes)
+
+    :Confirm MRC;
+    :End supervision;
+
+else (not approved)
+
+    :Vehicle performs MRM autonomously;
+    if(MRM succesful) equals (yes) then
+    else (no)
+        end
+    endif
+
+endif
+
+:Vehicle in MRC;
+@enduml

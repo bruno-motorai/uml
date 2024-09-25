@@ -1,0 +1,66 @@
+@startuml ts_use_cases
+left to right direction
+
+actor :Technical \n Suppervisor: as TS1
+
+package "Technical Supervisor App" {
+    usecase UC1 as "Supervise system map
+        
+        ....
+        Basic vehicle data
+    "
+    usecase UC2 as "Supervise vehicle
+        
+        ....
+        In-depth vehicle data
+    "
+    usecase UC3 as "Change geozone"
+
+    ' Supervise system
+    usecase "Confirm trip start" as UC100
+    usecase "System summary" as UC101
+    usecase "List vehicles" as UC102
+    usecase "Request/confirm vehicle supervision" as UC103
+    usecase "Vehicles routine diagnostics" as UC104
+    usecase "Mark problematic map zone" as  UC105
+
+    ' Supervise vehicle
+    usecase "Perform actions" as UC201
+    usecase "Video call" as UC202
+    usecase "Finish supervision (back to MRM)" as UC203
+
+
+    ' Vehicle actions
+    usecase "Update car software" as UC301
+    usecase "Update car settings" as UC302
+    usecase "Move car to point in map" as UC303
+    usecase "Deactivate hazard lights" as UC304
+    usecase "Opem car door" as UC305
+}
+
+' User connections
+TS1 --> UC2
+TS1 --> UC1
+TS1 --> UC3
+
+' Supervise system
+UC100 -u-> UC1 #line.dashed : <<extends>>
+UC101 -l-> UC1 #line.dashed : <<includes>>
+UC102 -u-> UC1 #line.dashed : <<extends>>
+UC103 -u-> UC1 #line.dashed : <<extends>>
+UC104 -r-> UC1 #line.dashed : <<includes>>
+UC105 -u-> UC1 #line.dashed : <<extends>>
+
+' Supervise vehicle
+UC201 -u-> UC2 #line.dashed : <<extends>>
+UC202 -u-> UC2 #line.dashed : <<extends>>
+UC203 -u-> UC2 #line.dashed : <<includes>>
+' Actions
+UC301 -u-> UC201 #line.dashed : <<extends>>
+UC302 -u-> UC201 #line.dashed : <<extends>>
+UC303 -u-> UC201 #line.dashed : <<extends>>
+UC304 -u-> UC201 #line.dashed : <<extends>>
+UC305 -u-> UC201 #line.dashed : <<extends>>
+
+
+@enduml
