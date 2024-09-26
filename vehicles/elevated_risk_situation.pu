@@ -6,12 +6,12 @@ title Elevated risk situations workflow
 :Vehicle with a fault;
 
 floating note right
-User(s): Techincal supervisor(s)
+Users: Technical supervisors
 MRM: Minimum risk maneuver
 MRC: Minimum risk condition
 end note
 
-:Notify system users;
+:Notify users;
 
 if (Request active supervision from TS) equals (approved) then
 
@@ -26,12 +26,11 @@ if (Request active supervision from TS) equals (approved) then
 
     while(Continuous data analysis.\n Vehicle suitable for MRC?) is (no)
         if (MRM required) equals (yes) then
-            :Choose maneuver from 
+            :Choose MRM from 
             suggestions or propose one;
             :Approve and perform MRM;
 
-            if(MRM succesful) equals (yes) then
-                break
+            if(MRM successful) equals (yes) then
             else (no)
             endif
 
@@ -42,20 +41,20 @@ if (Request active supervision from TS) equals (approved) then
 
     endwhile (yes)
 
-    :Confirm MRC;
-    :Vehicle in MRC;
+    :Confirm vehicle MRC;
     :End supervision;
 
+    stop
+    
 else (not approved)
 
     :Vehicle performs MRM autonomously;
-    if(MRM succesful) equals (yes) then
+    if(MRM successful) equals (yes) then
         :Vehicle in MRC;
-        :Notify system users;
+        :Notify users;
     else (no)
         end
     endif
-
+    stop
 endif
-stop
 @enduml

@@ -1,7 +1,7 @@
 @startuml ts_use_cases
 left to right direction
 
-actor :Technical \n Suppervisor: as TS1
+actor :Technical \n Supervisor: as TS1
 
 package "Technical Supervisor App" {
     usecase UC1 as "Supervise system map
@@ -35,7 +35,7 @@ package "Technical Supervisor App" {
     usecase "Update car settings" as UC302
     usecase "Move car to point in map" as UC303
     usecase "Deactivate hazard lights" as UC304
-    usecase "Opem car door" as UC305
+    usecase "Open car door" as UC305
 }
 
 ' User connections
