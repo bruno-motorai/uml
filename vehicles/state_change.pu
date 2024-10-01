@@ -1,0 +1,34 @@
+@startuml
+skinparam ConditionEndStyle hline
+[*] -> PassivelySupervised
+
+
+state PassivelySupervised {
+    state "Selftest/Maintenance" as Selftest
+    state Standby
+    state Driving
+    state DegradeDriving
+    state c <<choice>>
+}
+
+state Locked
+
+state DrivingCritical
+
+state MRC
+
+Standby --> Driving
+Selftest -> Standby : All good
+Driving --> Standby : End trip
+Driving --> c : Fault
+c --> DrivingCritical : Critical
+DrivingCritical --> MRC
+DrivingCritical --> Locked
+c --> DegradeDriving : No critical
+DegradeDriving --> Standby
+MRC -up-> Driving : Fault fix
+Locked -u-> Selftest
+Selftest -d-> Locked
+
+@enduml
+

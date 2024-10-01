@@ -1,54 +1,28 @@
 @startuml "ADS fault"
-skinparam ConditionEndStyle hline
-title Elevated risk situations workflow
 
+skinparam ConditionEndStyle hline
+title Elevated risk situations: TS-ADS workflow
 
 :Vehicle with a fault;
 
 floating note right
-Users: Technical supervisors
-MRM: Minimum risk maneuver
-MRC: Minimum risk condition
+    Users: Technical supervisors
+    MRM: Minimum risk maneuver
+    MRC: Minimum risk condition
+    MRDS: ?
 end note
 
-:Notify users;
+switch (User intervention required)
 
-if (Request active supervision from TS) equals (approved) then
-
-    :Initial diagnose based on extensive 
-    real-time vehicle data;
-    note left
-        Car state
-        Sensor stream
-        Context data
-        Historic data
-    end note
-
-    while(Continuous data analysis.\n Vehicle suitable for MRC?) is (no)
-        if (MRM required) equals (yes) then
-            :Choose MRM from 
-            suggestions or propose one;
-            :Approve and perform MRM;
-
-            if(MRM successful) equals (yes) then
-            else (no)
-            endif
-
-        else (no)
-            :Issue commands and
-            perform changes;
-        endif
-
-    endwhile (yes)
-
-    :Confirm vehicle MRC;
-    :End supervision;
-
-    stop
-    
-else (not approved)
-
+case (no)
+    label space_label_1
+    label space_label_2
+    label space_label_3
+    label space_label_5
+    label space_label_5
+    label autonomous_mrm
     :Vehicle performs MRM autonomously;
+
     if(MRM successful) equals (yes) then
         :Vehicle in MRC;
         :Notify users;
@@ -56,5 +30,48 @@ else (not approved)
         end
     endif
     stop
-endif
+
+case (yes)
+    :Notify users;
+
+    if (Request active supervision from TS) equals (not approved) then
+        label not_approved
+        goto autonomous_mrm
+
+    else (not approved)
+
+        :Initial diagnose based on extensive
+        real-time vehicle data;
+        
+        note left
+            Car state
+            Sensor stream
+            Context data
+            Historic data
+        end note
+
+        while(Continuous data analysis.\n Vehicle suitable for MRC?) is (no)
+            if (MRM required) equals (yes) then
+                :Choose MRM from
+                suggestions or propose one;
+                :Approve and perform MRM;
+
+                if(MRM successful) equals (yes) then
+                else (no)
+                endif
+
+            else (no)
+                :Issue commands and
+                perform changes;
+            endif
+
+        endwhile (yes)
+
+        :Confirm vehicle MRC;
+        :End supervision;
+
+        stop
+    endif
+
+
 @enduml
