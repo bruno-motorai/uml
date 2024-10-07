@@ -1,34 +1,44 @@
 @startuml
+title Car states flow
 skinparam ConditionEndStyle hline
-[*] -> PassivelySupervised
+[*] -d-> Ready
 
 
-state PassivelySupervised {
-    state "Selftest/Maintenance" as Selftest
-    state Standby
-    state Driving
-    state DegradeDriving
-    state c <<choice>>
-}
+state IsCriticalFault <<choice>>
 
+' Car is not operative and has to be tested. Reached by a previous problem (locked), car performs self checks and receives maintenance. The idea is to move to Ready state
+state "Maintenance" as Test
+' Car has no problems and is ready to be used
+state Ready
+' Car is on an active trip, driving with normal conditions
+state NominalDriving
+' Car is on an active trip with problems that doesn't prevent DDT
+state DegradeDriving
+
+' Car is standing still. After MRC or self checks, the car could change to Locked if something went wrong. Car cannot be used.
 state Locked
 
-state DrivingCritical
+' Car not usable anymore, performs MRM to go to MRC
+state CriticalDriving
 
+' Car standing still, very attentive to external factors, waiting to resume trip once a TS approval
 state MRC
 
-Standby --> Driving
-Selftest -> Standby : All good
-Driving --> Standby : End trip
-Driving --> c : Fault
-c --> DrivingCritical : Critical
-DrivingCritical --> MRC
-DrivingCritical --> Locked
-c --> DegradeDriving : No critical
-DegradeDriving --> Standby
-MRC -up-> Driving : Fault fix
-Locked -u-> Selftest
-Selftest -d-> Locked
+' Car cannot be utilized because is disabled by a user
+state Deactivated
+
+Ready --> NominalDriving
+Test -> Ready : Car is ready
+NominalDriving --> Ready : End
+NominalDriving --> IsCriticalFault : Fault
+IsCriticalFault --> CriticalDriving : Critical
+CriticalDriving -u-> MRC : MRM
+IsCriticalFault --> DegradeDriving : Not critical
+DegradeDriving --> Ready
+MRC -up-> NominalDriving
+MRC -r-> Locked
+Locked -u-> Test
+Test -d-> Locked
 
 @enduml
 

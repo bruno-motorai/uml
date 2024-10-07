@@ -1,43 +1,40 @@
 @startuml "ADS fault"
-
+start
 skinparam ConditionEndStyle hline
-title Elevated risk situations: TS-ADS workflow
+title Critical event in active ADS
 
-:Vehicle in a degraded state;
-
+:ADS detects fault or event;
 :Notify users;
 
-if (is critical) equals(yes) then
-
-    if(ADS knows how to MRM) equals (yes) then
-        label space_label_2
-        label space_label_1
-        label ads_mrm
-        :MRM;
+    if (Is critical?) equals(yes) then
+        :MRM performed by vehicle;
         :Vehicle in MRC;
-        :Notify users;
-        end
-    else (no)
-        if(Request active supervision from user) equals (no) then
-            label aux
-            goto ads_mrm
-        else (yes)
 
-            while(is vehicle suitable for MRC?) is (no)
-                :Approve or suggest MRM;
-            endwhile (yes)
+        if(Is active supervision possible?) equals (yes) then
+            
+            group Active Technical Supervisor
+                while(Is valid MRC?) is (no)
+                    :- Send commands
+                    - Suggest MRM;
+                endwhile (yes)
 
-            :Confirm MRC;
-            :Vehicle in MRC;
+                :Confirm MRC;
+                :Vehicle suggests valid 
+                maneuvers to go back to DDT (DDTM);
+                :Confirm DDTM;
+            end group
+            : Vehicle in NominalDriving;
+            stop
+        else (no)
+            label space_label
+            :Notify users;
             end
         endif
+
+    ' Could it be that a vehicle detects a critical flaw, knows what MRMs to perform and he will tell the user???
+
+    else (no)
+        :Vehicle in DegradedDriving;
+        stop
     endif
-  
-' Could it be that a vehicle detects a critical flaw, knows what MRMs to perform and he will tell the user???
-
-else (no)
-    :MRC is not required;
-    end
-endif
-
 @enduml
