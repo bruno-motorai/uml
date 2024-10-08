@@ -13,11 +13,10 @@ package "Technical Supervisor App" {
     usecase UC3 as (Change geozone) <<  UC3  >>
 
     ' Supervise system
-    usecase UC100 as (Confirm trip start) <<  UC1.1  >>
-    usecase UC101 as (System summary) <<  UC1.2  >>
+    usecase UC100 as (Approve trip start) <<  UC1.1  >>
+    usecase UC101 as (Analyze system summary) <<  UC1.2  >>
     usecase UC102 as (List ADS) <<  UC1.3  >>
-    ' UC103 as  usecase "Confirm ADS DDT" as 
-    usecase UC104 as (Perform ADS routine checks) <<  UC1.4  >>
+    usecase UC104 as (Perform ADS routine tests) <<  UC1.4  >>
     usecase UC105 as (Monitor ODD) <<  UC1.5  >>
 
     ' Supervise ADS
@@ -27,7 +26,6 @@ package "Technical Supervisor App" {
     usecase UC303 as (Suggest DDTM) <<  UC2.1.1  >>
     usecase UC304 as (Send ADV commands) <<  UC2.2  >>
     usecase UC305 as (Deactivate ADS) <<  UC2.3  >>
-    ' usecase UC304 as (Send ADS commands) <<  UC2.2  >>
 }
 
 ' User connections
@@ -39,15 +37,17 @@ UC5 --> UC4 : <<includes>>
 
 ' Supervise system
 UC100 --> UC1 #line.dashed : <<extends>>
-UC101 --> UC1 #line.dashed : <<includes>>
+UC101 --> UC1 #line.dashed : <<extends>>
 UC102 --> UC1 #line.dashed : <<extends>>
-UC104 --> UC1 #line.dashed : <<includes>>
+UC104 --> UC1 #line.dashed : <<extends>>
 UC105 --> UC1 #line.dashed : <<extends>>
+UC305 --> UC1 #line.dashed : <<extends>>
 
 ' Supervise ADS
 UC202 --> UC2 #line.dashed : <<extends>>
 UC303 --> UC202 #line.dashed : <<extends>>
 UC304 --> UC2 #line.dashed : <<extends>>
+UC104 --> UC2 #line.dashed : <<extends>>
 UC305 --> UC2 #line.dashed : <<extends>>
 
 @enduml
