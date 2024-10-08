@@ -8,25 +8,26 @@ actor :Technical\nSupervisor: as TS1
 package "Technical Supervisor App" {
     usecase UC4 as (Login) <<  UC4  >>
     usecase UC5 as (Log out) <<  UC5  >>
-    usecase UC1 as (Monitor vehicles in map)<<  UC1  >>
-    usecase UC2 as (Supervise vehicle) <<  UC2  >>
+    usecase UC1 as (Monitor ADS in map)<<  UC1  >>
+    usecase UC2 as (Supervise ADS) <<  UC2  >>
     usecase UC3 as (Change geozone) <<  UC3  >>
 
     ' Supervise system
     usecase UC100 as (Confirm trip start) <<  UC1.1  >>
     usecase UC101 as (System summary) <<  UC1.2  >>
-    usecase UC102 as (List vehicles) <<  UC1.3  >>
-    ' UC103 as  usecase "Confirm vehicle DDT" as 
-    usecase UC104 as (Perform routine checks on vehicle) <<  UC1.4  >>
-    usecase  UC105 as (Manage problematic zones) <<  UC1.5  >>
+    usecase UC102 as (List ADS) <<  UC1.3  >>
+    ' UC103 as  usecase "Confirm ADS DDT" as 
+    usecase UC104 as (Perform ADS routine checks) <<  UC1.4  >>
+    usecase UC105 as (Monitor ODD) <<  UC1.5  >>
 
-    ' Supervise vehicle
-    usecase UC202 as (Choose DDTM to go out of MRC) <<  UC2.1  >>
+    ' Supervise ADS
+    usecase UC202 as (Approve DDTM to go out of MRC) <<  UC2.1  >>
 
-    ' Vehicle actions
-    usecase UC303 as (Move car to point in map) <<  UC2.1.1  >>
-    usecase UC304 as (Send commands) <<  UC2.2  >>
-    usecase UC305 as (Deactivate vehicle) <<  UC2.3  >>
+    ' ADS actions
+    usecase UC303 as (Suggest DDTM) <<  UC2.1.1  >>
+    usecase UC304 as (Send ADV commands) <<  UC2.2  >>
+    usecase UC305 as (Deactivate ADS) <<  UC2.3  >>
+    ' usecase UC304 as (Send ADS commands) <<  UC2.2  >>
 }
 
 ' User connections
@@ -43,7 +44,7 @@ UC102 --> UC1 #line.dashed : <<extends>>
 UC104 --> UC1 #line.dashed : <<includes>>
 UC105 --> UC1 #line.dashed : <<extends>>
 
-' Supervise vehicle
+' Supervise ADS
 UC202 --> UC2 #line.dashed : <<extends>>
 UC303 --> UC202 #line.dashed : <<extends>>
 UC304 --> UC2 #line.dashed : <<extends>>

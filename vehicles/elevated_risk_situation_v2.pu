@@ -1,40 +1,55 @@
 @startuml "ADS fault"
-start
+<style>
+note {
+  .red {
+        BackgroundColor red
+   }
+}
+</style>
+
 skinparam ConditionEndStyle hline
-title Critical event in active ADS
+title Critical event on ADS trip
+
+start
+note left: Driving
 
 :ADS detects fault or event;
 :Notify users;
 
-    if (Is critical?) equals(yes) then
-        :MRM performed by vehicle;
-        :Vehicle in MRC;
+if (Is critical?) equals(yes) then
+    :ADS performs MRM;
+    note left: MRC
 
-        if(Is active supervision possible?) equals (yes) then
-            
-            group Active Technical Supervisor
-                while(Is valid MRC?) is (no)
-                    :- Send commands
-                    - Suggest MRM;
-                endwhile (yes)
+    if(Is active supervision possible?) equals (yes) then
 
-                :Confirm MRC;
-                :Vehicle suggests valid 
-                maneuvers to go back to DDT (DDTM);
-                :Confirm DDTM;
-            end group
-            : Vehicle in NominalDriving;
-            stop
-        else (no)
-            label space_label
-            :Notify users;
-            end
-        endif
+        group Active Technical Supervisor
+            :Identify and analyze fault;
 
-    ' Could it be that a vehicle detects a critical flaw, knows what MRMs to perform and he will tell the user???
+            if(Is DDT possible?) equals (yes) then
+                :Suggests maneuver to achieve DDT
+                (DDTM) or perform fixes;
+            else (no)
+                end
+                note left: MRC
+            endif
+        end group
 
-    else (no)
-        :Vehicle in DegradedDriving;
+        :Continue DDT;
+        note right: Driving or DegradedDriving
+        -> After trip ends;
         stop
+        note left: InPreparation
+    else (no)
+        label space_label
+        :Notify users;
+        end
+        note left: MRC
     endif
+else (no)
+    :Continue DDT;
+    note left: DegradedDriving
+    -> After trip ends;
+    stop
+    note left: InPreparation
+endif
 @enduml

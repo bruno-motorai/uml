@@ -1,25 +1,20 @@
 @startuml
-title Car states flow
+title ADV state transitions
 skinparam ConditionEndStyle hline
-[*] -d-> Ready
 
+' States
+state IsCriticalFault <<choice>> 
 
-state IsCriticalFault <<choice>>
+state InPreparation
 
-' Car is not operative and has to be tested. Reached by a previous problem (locked), car performs self checks and receives maintenance. The idea is to move to Ready state
-state "Maintenance" as Test
 ' Car has no problems and is ready to be used
-state Ready
+state "StandBy" as Ready
+
 ' Car is on an active trip, driving with normal conditions
-state NominalDriving
+state "Driving" as Driving
+
 ' Car is on an active trip with problems that doesn't prevent DDT
 state DegradeDriving
-
-' Car is standing still. After MRC or self checks, the car could change to Locked if something went wrong. Car cannot be used.
-state Locked
-
-' Car not usable anymore, performs MRM to go to MRC
-state CriticalDriving
 
 ' Car standing still, very attentive to external factors, waiting to resume trip once a TS approval
 state MRC
@@ -27,18 +22,28 @@ state MRC
 ' Car cannot be utilized because is disabled by a user
 state Deactivated
 
-Ready --> NominalDriving
-Test -> Ready : Car is ready
-NominalDriving --> Ready : End
-NominalDriving --> IsCriticalFault : Fault
-IsCriticalFault --> CriticalDriving : Critical
-CriticalDriving -u-> MRC : MRM
-IsCriticalFault --> DegradeDriving : Not critical
-DegradeDriving --> Ready
-MRC -up-> NominalDriving
-MRC -r-> Locked
-Locked -u-> Test
-Test -d-> Locked
+' Transitions
+[*] -d-> InPreparation : New ADV 
+InPreparation --> Ready : ADV ready
+InPreparation -l-> InPreparation: TS checks, self-checks
+Ready --> Driving
+Driving -> Ready : Trip ends
+Driving --> IsCriticalFault : New fault
+IsCriticalFault -> MRC : Critical
+IsCriticalFault -> DegradeDriving : Not critical
+DegradeDriving --> InPreparation : Trip ends
+MRC --> Driving : Fixed
+MRC --> DegradeDriving : Partially fixed
+MRC -> InPreparation : Not fixed
+
+' Deactivation
+InPreparation --> Deactivated
+Ready --> Deactivated
+MRC --> Deactivated
+DegradeDriving --> Deactivated
+Driving --> Deactivated
+Deactivated --> InPreparation
+
 
 @enduml
 
