@@ -1,0 +1,33 @@
+@startuml
+
+database "DB" as db {
+    component "ODD Management"
+    component "User zones"
+    component "Users"
+    component "Activity logs"
+    component "Car profile"
+    component "Notifications"
+}
+
+node "ADS" as ads
+
+node "Technical supervisor App" as ts {
+    component "GUI" as gui
+    component "Backend" as backend
+}
+
+cloud "S3 storage" {
+    database "ADS Logs" as ads_db {
+        component "Sensors"
+    } 
+}
+
+component "MQTT broker" as mqtt_broker
+
+backend -r-> db
+backend <-> mqtt_broker
+ads --> ads_db 
+mqtt_broker <-> ads
+backend -> ads_db
+gui <-> backend
+@enduml
