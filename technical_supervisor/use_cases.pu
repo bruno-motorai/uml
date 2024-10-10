@@ -8,8 +8,8 @@ actor :Technical\nSupervisor: as TS1
 package "Technical Supervisor App" {
     usecase UC4 as (Login) <<  UC4  >>
     usecase UC5 as (Log out) <<  UC5  >>
-    usecase UC1 as (Monitor ADS in map)<<  UC1  >>
-    usecase UC2 as (Supervise ADS) <<  UC2  >>
+    usecase UC1 as (MONITOR)<<  UC1  >>
+    usecase UC2 as (ACT) <<  UC2  >>
     usecase UC3 as (Change geozone) <<  UC3  >>
 
     ' Supervise system
@@ -18,10 +18,10 @@ package "Technical Supervisor App" {
     usecase UC102 as (List ADS) <<  UC1.3  >>
     usecase UC104 as (Perform ADS routine tests) <<  UC1.4  >>
     usecase UC105 as (Monitor ODD) <<  UC1.5  >>
+    usecase UC106 as (Suggest trip route) << UC1.1.1 >>
 
     ' Supervise ADS
     usecase UC202 as (Approve DDTM to go out of MRC) <<  UC2.1  >>
-
     ' ADS actions
     usecase UC303 as (Suggest DDTM) <<  UC2.1.1  >>
     usecase UC304 as (Send ADV commands) <<  UC2.2  >>
@@ -30,9 +30,9 @@ package "Technical Supervisor App" {
 
 ' User connections
 TS1 -up-> UC4
-UC2 -> UC4 : <<extends>> 
-UC1 --> UC4 : <<extends>> 
-UC3 --> UC4 : <<extends>> 
+UC2 -> UC4 #line.dashed : <<extends>> 
+UC1 --> UC4 : <<includes>> 
+UC3 --> UC4 #line.dashed : <<extends>> 
 UC5 --> UC4 : <<includes>>
 
 ' Supervise system
@@ -41,13 +41,12 @@ UC101 --> UC1 #line.dashed : <<extends>>
 UC102 --> UC1 #line.dashed : <<extends>>
 UC104 --> UC1 #line.dashed : <<extends>>
 UC105 --> UC1 #line.dashed : <<extends>>
-UC305 --> UC1 #line.dashed : <<extends>>
+UC106 --> UC100 #line.dashed : <<extends>>
 
 ' Supervise ADS
 UC202 --> UC2 #line.dashed : <<extends>>
 UC303 --> UC202 #line.dashed : <<extends>>
 UC304 --> UC2 #line.dashed : <<extends>>
-UC104 --> UC2 #line.dashed : <<extends>>
 UC305 --> UC2 #line.dashed : <<extends>>
 
 @enduml
