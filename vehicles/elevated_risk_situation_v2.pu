@@ -22,23 +22,46 @@ if (Is critical?) equals(yes) then
 
     if(Is active supervision possible?) equals (yes) then
 
-        group Active Technical Supervisor
+        group Technical Supervisor
             :Identify and analyze fault;
 
             if(Is DDT possible?) equals (yes) then
                 :Suggests maneuver to achieve DDT
                 (DDTM) or perform fixes;
-            else (no)
-                end
-                note left: MRC
-            endif
-        end group
 
+                if (Continue DDT normally?) equals (yes) then
+                else (no)
+                    label aux_label
+                    :Continue DDT;
+                    note left: DegradedDriving
+                    -> After trip ends;
+                    stop
+                    note left: InWorkshop
+                endif
+                
+            else (no)
+                :Analyze MRC state;
+                if (Is MRC optimal?) equals (yes) then
+                    end
+                    note right: MRC
+                else (no)
+                    while (MRC can be better)
+                        :Analyze scenario;
+                        :Perform MRM;
+                    endwhile
+                    end
+                    note left: MRC'
+                endif
+            endif
+
+            
+        end group                
+        
         :Continue DDT;
-        note right: Driving or DegradedDriving
+        note right: Driving
         -> After trip ends;
         stop
-        note left: InPreparation
+        note left: StandBy
     else (no)
         label space_label
         :Notify users;
@@ -46,10 +69,11 @@ if (Is critical?) equals(yes) then
         note left: MRC
     endif
 else (no)
+    label degraded_ddt
     :Continue DDT;
     note left: DegradedDriving
     -> After trip ends;
     stop
-    note left: InPreparation
+    note left: InWorkshop
 endif
 @enduml

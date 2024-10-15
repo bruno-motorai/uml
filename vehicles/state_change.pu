@@ -5,7 +5,7 @@ title ADV state transitions
 skinparam ConditionEndStyle hline
 
 ' States
-state InWorkshop $NOT_ACTIVE_COLOR
+state InReparation $NOT_ACTIVE_COLOR
 
 state PassiveSupervision {
     state InPreparation as "InReview" $NOT_ACTIVE_COLOR
@@ -39,13 +39,13 @@ Driving --> IsCriticalFault : New fault
 Driving -[$NOT_ACTIVE_COLOR]-> MRC: Deactivation [TS]
 IsCriticalFault -[$NOT_ACTIVE_COLOR]-> MRC : Critical
 IsCriticalFault --> DegradeDriving : Not critical
-DegradeDriving -[$NOT_ACTIVE_COLOR]-> InWorkshop : Trip ends
-InWorkshop --> InPreparation : Approved
+DegradeDriving -[$NOT_ACTIVE_COLOR]-> InReparation : Trip ends
+InReparation --> InPreparation : Approved
 MRC -[$ACTIVE_COLOR]-> Driving : Fix [TS]
 MRC -[$ACTIVE_COLOR]> DegradeDriving : Partial fix [TS]
-MRC ----> InWorkshop : Not fix found [TS]
+MRC ----> InReparation : Not fix found [TS]
 DegradeDriving -[$NOT_ACTIVE_COLOR]> MRC : New fault or \n deactivation [TS]
  
-note "Green: Active ADS\/\nRed: Non active ADS\/\n[TS]: Must be confirmed by user" as N1
+note "Green arrows: Activate ADS\/\nRed arrows: Deactivate ADS\/\nBlack arrows: No ADS state change \/\n[TS]: Transition must be confirmed by user" as N1
 @enduml
 
