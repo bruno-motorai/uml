@@ -7,32 +7,28 @@ skinparam ConditionEndStyle hline
 ' States
 state InReparation $NOT_ACTIVE_COLOR
 
-state PassiveSupervision {
-    state InPreparation as "InReview" $NOT_ACTIVE_COLOR
+state InReview $NOT_ACTIVE_COLOR
 
-    ' Car has no problems and is ready to be used
-    state "StandBy" as Ready $NOT_ACTIVE_COLOR
-}
+' Car has no problems and is ready to be used
+state "StandBy" as Ready $NOT_ACTIVE_COLOR
 
-state ActiveSupervision {
-    ' Car is on an active trip, driving with normal conditions
-    state "Driving" as Driving $ACTIVE_COLOR
+' Car is on an active trip, driving with normal conditions
+state "Driving" as Driving $ACTIVE_COLOR
 
-    ' Car is on an active trip with problems that doesn't prevent DDT
-    state DegradeDriving $ACTIVE_COLOR
+' Car is on an active trip with problems that doesn't prevent DDT
+state DegradeDriving $ACTIVE_COLOR
 
-    ' Decision state
-    state IsCriticalFault <<choice>> 
+' Decision state
+state IsCriticalFault <<choice>> 
 
-    ' Car standing still, very attentive to external factors, waiting to resume trip once a TS approval
-    state MRC $NOT_ACTIVE_COLOR
-}
+' Car standing still, very attentive to external factors, waiting to resume trip once a TS approval
+state MRC $NOT_ACTIVE_COLOR
 
 
 ' Transitions
-[*] --> InPreparation : New ADV \n (Non active ADS)
-InPreparation -> Ready : ADV is ready [TS]
-InPreparation -> InPreparation: Self checks and\nTS checks
+[*] -> InReview : New ADV \n (Non active ADS)
+InReview -d-> Ready : ADV is ready [TS]
+InReview -> InReview: Self checks and\nTS checks
 Ready -[$ACTIVE_COLOR]> Driving : Trip starts [TS]
 Driving -[$NOT_ACTIVE_COLOR]-> Ready : Trip ends
 Driving --> IsCriticalFault : New fault
@@ -40,7 +36,7 @@ Driving -[$NOT_ACTIVE_COLOR]-> MRC: Deactivation [TS]
 IsCriticalFault -[$NOT_ACTIVE_COLOR]-> MRC : Critical
 IsCriticalFault --> DegradeDriving : Not critical
 DegradeDriving -[$NOT_ACTIVE_COLOR]-> InReparation : Trip ends
-InReparation --> InPreparation : Approved
+InReparation --> InReview : Approved
 MRC -[$ACTIVE_COLOR]-> Driving : Fix [TS]
 MRC -[$ACTIVE_COLOR]> DegradeDriving : Partial fix [TS]
 MRC ----> InReparation : Not fix found [TS]
