@@ -22,11 +22,13 @@ package "Technical Supervisor App" {
     usecase UC107 as (List ADS) <<  UC1.6  >>
 
     ' Supervise ADS
-    usecase UC202 as (Approve DDTM to go out of MRC) <<  UC2.1  >>
-    ' ADS actions
-    usecase UC303 as (Suggest DDTM) <<  UC2.1.1  >>
-    usecase UC304 as (Send ADV commands) <<  UC2.2  >>
-    usecase UC305 as (Deactivate ADS) <<  UC2.3  >>
+    usecase UC201 as (Approve DDTM to go out of MRC) <<  UC2.1  >>
+    usecase UC202 as (Suggest DDTM) <<  UC2.1.1  >>
+    usecase UC203 as (Mark ADS for workshop) <<  UC2.2  >>
+    usecase UC204 as (Communicate with ADS passengers) <<  UC2.3  >>
+    usecase UC205 as (Monitor ADS passengers) <<  UC2.4  >>
+    usecase UC206 as (Send ADV commands) <<  UC2.5  >>
+    usecase UC207 as (Deactivate ADS) <<  UC2.6  >>
 }
 
 ' User connections
@@ -46,9 +48,12 @@ UC105 --> UC1 #line.dashed : <<extends>>
 UC107 --> UC1 #line.dashed : <<extends>>
 
 ' Supervise ADS
-UC202 --> UC2 #line.dashed : <<extends>>
-UC303 --> UC202 #line.dashed : <<extends>>
-UC304 --> UC2 #line.dashed : <<extends>>
-UC305 --> UC2 #line.dashed : <<extends>>
+UC201 --> UC2 #line.dashed : <<extends>>
+UC202 --> UC201 #line.dashed : <<extends>>
+UC203 --> UC2 #line.dashed : <<extends>>
+UC204 --> UC2 #line.dashed : <<extends>>
+UC205 --> UC2 #line.dashed : <<extends>>
+UC206 --> UC2 #line.dashed : <<extends>>
+UC207 --> UC2 #line.dashed : <<extends>>
 
 @enduml

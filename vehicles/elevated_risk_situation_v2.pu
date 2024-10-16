@@ -36,7 +36,7 @@ if (Is critical?) equals(yes) then
                     note left: DegradedDriving
                     -> After trip ends;
                     stop
-                    note left: InWorkshop
+                    note left: InReparation
                 endif
                 
             else (no)
@@ -64,7 +64,6 @@ if (Is critical?) equals(yes) then
         note left: StandBy
     else (no)
         label space_label
-        :Notify users;
         end
         note left: MRC
     endif
@@ -74,6 +73,6 @@ else (no)
     note left: DegradedDriving
     -> After trip ends;
     stop
-    note left: InWorkshop
+    note left: InReparation
 endif
 @enduml
