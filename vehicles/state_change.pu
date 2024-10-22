@@ -22,7 +22,7 @@ state DegradeDriving $ACTIVE_COLOR
 state IsCriticalFault <<choice>> 
 
 ' Car standing still, very attentive to external factors, waiting to resume trip once a TS approval
-state MRC $NOT_ACTIVE_COLOR
+state "MRS" as MRC $NOT_ACTIVE_COLOR 
 
 
 ' Transitions

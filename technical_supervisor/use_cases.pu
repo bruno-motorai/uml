@@ -22,7 +22,7 @@ package "Technical Supervisor App" {
     usecase UC107 as (List ADS) <<  UC1.6  >>
 
     ' Supervise ADS
-    usecase UC201 as (Approve DDTM to go out of MRC) <<  UC2.1  >>
+    usecase UC201 as (Approve DDTM to go out of MRS) <<  UC2.1  >>
     usecase UC202 as (Suggest DDTM) <<  UC2.1.1  >>
     usecase UC203 as (Mark ADS for workshop) <<  UC2.2  >>
     usecase UC204 as (Communicate with ADS passengers) <<  UC2.3  >>

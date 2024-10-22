@@ -23,7 +23,7 @@ package "Technical Supervisor App" {
 
     rectangle Act {
         ' Supervise ADS
-        usecase UC202 as (Approve DDTM to go out of MRC) <<  UC7  >>
+        usecase UC202 as (Approve DDTM to go out of MRS) <<  UC7  >>
         ' ADS actions
         usecase UC303 as (Suggest DDTM) <<  UC7.1  >>
         usecase UC304 as (Send ADV commands) <<  UC8  >>

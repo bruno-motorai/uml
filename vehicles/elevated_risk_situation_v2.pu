@@ -18,7 +18,7 @@ note left: Driving
 
 if (Is critical?) equals(yes) then
     :ADS performs MRM;
-    note left: MRC
+    note left: MRS
 
     if(Is active supervision possible?) equals (yes) then
 
@@ -40,17 +40,17 @@ if (Is critical?) equals(yes) then
                 endif
                 
             else (no)
-                :Analyze MRC state;
-                if (Is MRC optimal?) equals (yes) then
+                :Analyze MRS state;
+                if (Is MRS optimal?) equals (yes) then
                     end
-                    note right: MRC
+                    note right: MRS
                 else (no)
-                    while (MRC can be better)
+                    while (MRS can be better)
                         :Analyze scenario;
                         :Perform MRM;
                     endwhile
                     end
-                    note left: MRC'
+                    note left: MRS'
                 endif
             endif
 
@@ -65,7 +65,7 @@ if (Is critical?) equals(yes) then
     else (no)
         label space_label
         end
-        note left: MRC
+        note left: MRS
     endif
 else (no)
     label degraded_ddt
