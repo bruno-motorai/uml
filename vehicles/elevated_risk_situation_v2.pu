@@ -26,8 +26,8 @@ if (Is critical?) equals(yes) then
             :Identify and analyze fault;
 
             if(Is DDT possible?) equals (yes) then
-                :Suggests maneuver to achieve DDT
-                (DDTM) or perform fixes;
+                :Suggests/approves maneuver to achieve DDT
+                (DDTM) or perform commands/fixes;
 
                 if (Continue DDT normally?) equals (yes) then
                 else (no)
@@ -47,7 +47,8 @@ if (Is critical?) equals(yes) then
                 else (no)
                     while (MRS can be better)
                         :Analyze scenario;
-                        :Perform MRM;
+                        :Suggest and perform MRM 
+                        or commands/fixes;
                     endwhile
                     end
                     note left: MRS'
