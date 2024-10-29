@@ -24,41 +24,45 @@ if (Is critical?) equals(yes) then
 
         group Technical Supervisor
             :Identify and analyze fault;
-
             if(Is DDT possible?) equals (yes) then
-                :Suggests/approves maneuver to achieve DDT
-                (DDTM) or perform commands/fixes;
 
-                if (Continue DDT normally?) equals (yes) then
-                else (no)
+                repeat :Analyze scenario;
+                :Suggests/approves maneuver to achieve\n DDT (DDTM) or perform commands/fixes;
+                repeat while (ADS self-checks) is (red) not (green)
+
+                if (Can ADS continue \n DDT normally?) equals (no) then
                     label aux_label
-                    :Continue DDT;
+                    :ADS continue DDT;
                     note left: DegradedDriving
                     -> After trip ends;
                     stop
                     note left: InReparation
+                else (yes)
                 endif
                 
             else (no)
                 :Analyze MRS state;
                 if (Is MRS optimal?) equals (yes) then
+                    :Mark ADS to be repaired;
                     end
-                    note right: MRS
+                    note right: InReparation
                 else (no)
                     while (MRS can be better)
                         :Analyze scenario;
                         :Suggest and perform MRM 
                         or commands/fixes;
                     endwhile
-                    end
+                    :Mark ADS to be repaired;
                     note left: MRS'
+                    end
+                    note left: InReparation
                 endif
             endif
 
             
         end group                
         
-        :Continue DDT;
+        :ADS continue DDT;
         note right: Driving
         -> After trip ends;
         stop
@@ -70,7 +74,7 @@ if (Is critical?) equals(yes) then
     endif
 else (no)
     label degraded_ddt
-    :Continue DDT;
+    :ADS continue DDT;
     note left: DegradedDriving
     -> After trip ends;
     stop
