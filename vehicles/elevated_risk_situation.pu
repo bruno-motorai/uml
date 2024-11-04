@@ -1,77 +1,83 @@
 @startuml "ADS fault"
+<style>
+note {
+  .red {
+        BackgroundColor red
+   }
+}
+</style>
 
 skinparam ConditionEndStyle hline
-title Elevated risk situations: TS-ADS workflow
+title Critical event on ADS trip
 
-:Vehicle with a fault;
+start
+note left: Driving
 
-floating note right
-    Users: Technical supervisors
-    MRM: Minimum risk maneuver
-    MRC: Minimum risk condition
-    MRDS: ?
-end note
+:ADS detects fault or event;
+:Notify users;
 
-switch (User intervention required)
+if (Is critical?) equals(yes) then
+    :ADS performs MRM;
+    note left: MRS
 
-case (no)
-    label space_label_1
-    label space_label_2
-    label space_label_3
-    label space_label_5
-    label space_label_5
-    label autonomous_mrm
-    :Vehicle performs MRM autonomously;
+    if(Is active supervision possible?) equals (yes) then
 
-    if(MRM successful) equals (yes) then
-        :Vehicle in MRC;
-        :Notify users;
-    else (no)
-        end
-    endif
-    stop
+        group Technical Supervisor
+            :Identify and analyze fault;
+            if(Is DDT possible?) equals (yes) then
 
-case (yes)
-    :Notify users;
+                repeat :Analyze scenario;
+                :Suggests/approves maneuver to achieve\n DDT (DDTM) or perform commands/fixes;
+                repeat while (ADS self-checks) is (red) not (green)
 
-    if (Request active supervision from TS) equals (not approved) then
-        label not_approved
-        goto autonomous_mrm
-
-    else (not approved)
-
-        :Initial diagnose based on extensive
-        real-time vehicle data;
-        
-        note left
-            Car state
-            Sensor stream
-            Context data
-            Historic data
-        end note
-
-        while(Continuous data analysis.\n Vehicle suitable for MRC?) is (no)
-            if (MRM required) equals (yes) then
-                :Choose MRM from
-                suggestions or propose one;
-                :Approve and perform MRM;
-
-                if(MRM successful) equals (yes) then
-                else (no)
+                if (Can ADS continue \n DDT normally?) equals (no) then
+                    label aux_label
+                    :ADS continue DDT;
+                    note left: DegradedDriving
+                    -> After trip ends;
+                    stop
+                    note left: InReparation
+                else (yes)
                 endif
-
+                
             else (no)
-                :Issue commands and
-                perform changes;
+                :Analyze MRS state;
+                if (Is MRS optimal?) equals (yes) then
+                    :Mark ADS to be repaired;
+                    end
+                    note right: InReparation
+                else (no)
+                    while (MRS can be better)
+                        :Analyze scenario;
+                        :Suggest and perform MRM 
+                        or commands/fixes;
+                    endwhile
+                    :Mark ADS to be repaired;
+                    note left: MRS'
+                    end
+                    note left: InReparation
+                endif
             endif
 
-        endwhile (yes)
-
-        :Confirm vehicle MRC;
-        :End supervision;
-
+            
+        end group                
+        
+        :ADS continue DDT;
+        note right: Driving
+        -> After trip ends;
         stop
+        note left: StandBy
+    else (no)
+        label space_label
+        end
+        note left: MRS
     endif
-
-
+else (no)
+    label degraded_ddt
+    :ADS continue DDT;
+    note left: DegradedDriving
+    -> After trip ends;
+    stop
+    note left: InReparation
+endif
 @enduml
