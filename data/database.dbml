@@ -1,0 +1,102 @@
+Table case {
+  id integer [PK] 
+  ads_id integer
+  user_id integer [ref: > user.id]
+  reason_to_be_closed varchar
+  send_to_workshop boolean
+  created timestamp
+  updated timestamp
+  closed timestamp
+  state case_state
+}
+
+Table case_comment {
+    id integer [PK]
+    case_id integer [ref: > case.id]
+    user_id integer [ref: > user.id]
+    comment varchar
+    created timestamp   
+}
+
+Table comment_image {
+    id integer [PK]
+    image bytea
+    comment_id integer [ref: > case_comment.id]
+    created timestamp
+}
+
+Table geozone {
+    id integer [PK]
+    name varchar
+    description varchar
+    created timestamp
+    updated timestamp
+    boundaries JSONB
+}
+
+Table user_geozone {
+    id integer [PK]
+    user_id integer [ref: > user.id]
+    geozone_id integer [ref: > geozone.id]
+    created timestamp
+    updated timestamp
+}
+
+Table user {
+    id integer [PK]
+    email varchar
+    password varchar
+    created timestamp
+    updated timestamp
+}
+
+Table user_role {
+    id integer [PK]
+    user_id integer [ref: > user.id]
+    role_id integer [ref: > role.id]
+    created timestamp
+    updated timestamp
+}
+
+Table role { 
+    id integer [PK]
+    name varchar
+    created timestamp
+    updated timestamp
+}
+
+Table role_permission {
+    id integer [PK]
+    role_id integer [ref: > role.id]
+    permission_id integer [ref: > permission.id]
+    created timestamp
+    updated timestamp
+}
+
+Table permission {
+    id integer [PK]
+    name varchar
+    created timestamp
+    updated timestamp
+}
+
+Enum ads_state {
+    in_reparation
+    in_review
+    stand_by
+    driving
+    degraded_driving
+    mrs
+}
+
+Enum case_state {
+    open
+    closed
+    solved
+}
+
+Enum mrm_type {
+    straight_stop
+    inlane_stop
+    road_should_stop
+}
