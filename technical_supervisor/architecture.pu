@@ -1,33 +1,44 @@
 @startuml
+skinparam nodesep 10
+skinparam ranksep 5
+' skinparam BoxPadding 1
 
-database "DB" as db {
-    component "ODD Management"
-    component "User zones"
-    component "Users"
-    component "Activity logs"
-    component "Car profile"
-    component "Notifications"
+scale 1.0
+
+node "Technical supervisor App" as ts {
+    component "TS App" as gui
+
+    node "Backend" as backend {
+        component "REST API"
+        component "MQTT API"
+        component "Assignment engine"
+        component "Notification engine"
+    }
+
+    database "DB" as db {
+        component "Auth"
+        component "Geozones"
+        component "Users"
+        component "User logs"
+        component "Cases"
+        component "Notifications"
+    }
 }
 
 node "ADS" as ads
 
-node "Technical supervisor App" as ts {
-    component "GUI" as gui
-    component "Backend" as backend
-}
+component "MQTT broker" as mqtt_broker
 
 cloud "S3 storage" {
     database "ADS Logs" as ads_db {
-        component "Sensors"
+        ' component "Sensors"
     } 
 }
 
-component "MQTT broker" as mqtt_broker
-
-backend -r-> db
-backend <-> mqtt_broker
-ads --> ads_db 
-mqtt_broker <-> ads
+backend --> db
+ads -down-> ads_db
+ads <-up-> mqtt_broker
+mqtt_broker <--left-> backend
 backend -> ads_db
-gui <-> backend
+gui -down-> backend
 @enduml
