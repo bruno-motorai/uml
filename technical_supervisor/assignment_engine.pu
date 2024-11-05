@@ -1,0 +1,20 @@
+@startuml
+participant "Assignment Engine" as AE
+participant "ADS" as ADS
+database "DB" as DB
+actor "Supervisor" as TS
+
+ADS -> AE: MRS reached
+AE -> DB: Get users
+DB --> AE: Users
+|||
+AE -> AE: Filter and picks a user
+|||
+AE -> TS: Active supervision request
+TS --> AE: Accept request
+AE -> DB: Create a case
+DB --> AE: Case
+|||
+AE -> AE: Monitors supervision
+
+@enduml

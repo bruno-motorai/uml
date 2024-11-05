@@ -33,9 +33,7 @@ node "ADS" as ads
 component "MQTT broker" as mqtt_broker
 
 cloud "S3 storage" {
-    database "ADS Logs" as ads_db {
-        ' component "Sensors"
-    } 
+    database "ADS Logs" as ads_db
 }
 
 backend --> db
