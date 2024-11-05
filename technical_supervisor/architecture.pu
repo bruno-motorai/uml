@@ -1,7 +1,6 @@
 @startuml
 skinparam nodesep 10
 skinparam ranksep 5
-' skinparam BoxPadding 1
 
 scale 1.0
 
@@ -11,16 +10,20 @@ node "Technical supervisor App" as ts {
     node "Backend" as backend {
         component "REST API"
         component "MQTT API"
+        component "Auth engine"
         component "Assignment engine"
         component "Notification engine"
+        component "Logging engine"
     }
 
     database "DB" as db {
-        component "Auth"
+        component "ADS profile"
+        component "Cases"
         component "Geozones"
         component "Users"
+        component "User roles"
+        component "User permissions"
         component "User logs"
-        component "Cases"
         component "Notifications"
     }
 }
