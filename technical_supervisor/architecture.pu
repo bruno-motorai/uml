@@ -4,16 +4,22 @@ skinparam ranksep 5
 
 scale 1.0
 
-node "Technical supervisor App" as ts {
-    component "TS App" as gui
+node "Technical supervisor system" as ts {
+    component "GUI" as gui
 
     node "Backend" as backend {
-        component "REST API"
-        component "MQTT API"
-        component "Auth engine"
-        component "Assignment engine"
-        component "Notification engine"
-        component "Logging engine"
+        component "Auth module" as auth
+        component "Assignment engine" as assignment_engine
+        component "Notification engine" as notification_engine
+        component "Logging engine" as log_engine
+        component "MQTT client" as mqtt_client
+
+
+        package "APIs" {
+            component "REST API" as rest_api
+            component "Websockets API" as ws_api
+        }
+
     }
 
     database "DB" as db {
@@ -36,10 +42,16 @@ cloud "S3 storage" {
     database "ADS Logs" as ads_db
 }
 
-backend --> db
 ads -down-> ads_db
 ads <-up-> mqtt_broker
-mqtt_broker <--left-> backend
-backend -> ads_db
-gui -down-> backend
+mqtt_broker <--> mqtt_client
+gui -down-> rest_api
+gui -down-> ws_api
+rest_api -d-> auth
+rest_api -d-> log_engine
+rest_api -d-> ads_db
+rest_api -d-> db
+ws_api -d-> assignment_engine
+notification_engine -r-> ws_api
+ws_api <-d-> mqtt_client
 @enduml
