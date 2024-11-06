@@ -5,7 +5,7 @@ title ADV state transitions
 skinparam ConditionEndStyle hline
 
 ' States
-state InReparation $NOT_ACTIVE_COLOR
+state InRepair $NOT_ACTIVE_COLOR
 
 state InReview $NOT_ACTIVE_COLOR
 
@@ -16,7 +16,7 @@ state "StandBy" as Ready $NOT_ACTIVE_COLOR
 state "Driving" as Driving $ACTIVE_COLOR
 
 ' Car is on an active trip with problems that doesn't prevent DDT
-state DegradeDriving $ACTIVE_COLOR
+state DegradedDriving $ACTIVE_COLOR
 
 ' Decision state
 state IsCriticalFault <<choice>> 
@@ -24,23 +24,29 @@ state IsCriticalFault <<choice>>
 ' Car standing still, very attentive to external factors, waiting to resume trip once a TS approval
 state "MRS" as MRC $NOT_ACTIVE_COLOR 
 
+state IsRelocationRequired <<choice>>
+
+state Relocating
 
 ' Transitions
 [*] -> InReview : New ADV \n (Non active ADS)
-InReview -d-> Ready : ADV is ready [TS]
+InReview -u> Ready : ADV is ready [TS]
 InReview -> InReview: Self checks and\nTS checks
 Ready -[$ACTIVE_COLOR]> Driving : Trip starts [TS]
-Driving -[$NOT_ACTIVE_COLOR]-> Ready : Trip ends
+Driving -[$NOT_ACTIVE_COLOR]u-> IsRelocationRequired : Trip ends
+IsRelocationRequired -> Relocating : \nRelocation required
+IsRelocationRequired -> Ready : Relocation not required
+Relocating -u> Ready : \nReachs destination
 Driving --> IsCriticalFault : New fault
 Driving -[$NOT_ACTIVE_COLOR]-> MRC: Deactivation [TS]
 IsCriticalFault -[$NOT_ACTIVE_COLOR]-> MRC : Critical
-IsCriticalFault --> DegradeDriving : Not critical
-DegradeDriving -[$NOT_ACTIVE_COLOR]-> InReparation : Trip ends
-InReparation --> InReview : Approved
+IsCriticalFault --> DegradedDriving : Not critical
+DegradedDriving -[$NOT_ACTIVE_COLOR]> InRepair : Trip ends
+InRepair --> InReview : Approved
 MRC -[$ACTIVE_COLOR]-> Driving : Fix [TS]
-MRC -[$ACTIVE_COLOR]> DegradeDriving : Partial fix [TS]
-MRC ----> InReparation : Not fix found [TS]
-DegradeDriving -[$NOT_ACTIVE_COLOR]> MRC : New fault or \n deactivation [TS]
+MRC -[$ACTIVE_COLOR]> DegradedDriving : Partial fix [TS]Rerouting
+MRC --> InRepair : Not fix found [TS]
+DegradedDriving -[$NOT_ACTIVE_COLOR]> MRC : New fault or \n deactivation [TS]
  
 note "Green arrows: Activate ADS\/\nRed arrows: Deactivate ADS\/\nBlack arrows: No ADS state change \/\n[TS]: Transition must be confirmed by user" as N1
 @enduml
