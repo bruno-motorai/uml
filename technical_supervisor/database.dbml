@@ -1,13 +1,29 @@
 Table case {
   id integer [PK] 
-  ads_id integer
+  ads_id integer [ref: > ads.id]
   user_id integer [ref: > user.id]
-  reason_to_be_closed varchar
+  state case_state
+  reason varchar
   send_to_workshop boolean
   created timestamp
   updated timestamp
   closed timestamp
-  state case_state
+  origin JSONB
+}
+
+Table ads {
+    id integer [PK]
+    type ads_type
+    created timestamp
+    updated timestamp
+}
+
+Table ads_comment {
+    id integer [PK]
+    ads_id integer [ref: > ads.id]
+    user_id integer [ref: > user.id]
+    comment varchar
+    created timestamp
 }
 
 Table case_comment {
@@ -15,6 +31,7 @@ Table case_comment {
     case_id integer [ref: > case.id]
     user_id integer [ref: > user.id]
     comment varchar
+    highlight boolean
     created timestamp   
 }
 
@@ -31,7 +48,7 @@ Table geozone {
     description varchar
     created timestamp
     updated timestamp
-    boundaries JSONB
+    odd JSONB
 }
 
 Table user_geozone {
@@ -48,6 +65,7 @@ Table user {
     password varchar
     created timestamp
     updated timestamp
+    skills JSONB
 }
 
 Table user_role {
@@ -87,6 +105,7 @@ Enum ads_state {
     driving
     degraded_driving
     mrs
+    relocating
 }
 
 Enum case_state {
@@ -99,4 +118,10 @@ Enum mrm_type {
     straight_stop
     inlane_stop
     road_should_stop
+}
+
+Enum ads_type {
+    eqv
+    ushift
+    omnicars   
 }
