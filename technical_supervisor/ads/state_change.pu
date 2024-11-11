@@ -22,31 +22,36 @@ state DegradedDriving $ACTIVE_COLOR
 state IsCriticalFault <<choice>> 
 
 ' Car standing still, very attentive to external factors, waiting to resume trip once a TS approval
-state "MRS" as MRC $NOT_ACTIVE_COLOR 
+state "MRS" as MRS $NOT_ACTIVE_COLOR 
 
 state IsRelocationRequired <<choice>>
 
-state Relocating
+state IsDegradedRelocationRequired <<choice>>
+
+state Relocating $ACTIVE_COLOR 
 
 ' Transitions
 [*] -> InReview : New ADV \n (Non active ADS)
 InReview -u> Ready : ADV is ready [TS]
 InReview -> InReview: Self checks and\nTS checks
 Ready -[$ACTIVE_COLOR]> Driving : Trip starts [TS]
-Driving -[$NOT_ACTIVE_COLOR]u-> IsRelocationRequired : Trip ends
-IsRelocationRequired -> Relocating : \nRelocation required
-IsRelocationRequired -> Ready : Relocation not required
-Relocating -u> Ready : \nReachs destination
+Driving -u-> IsRelocationRequired : Trip ends
+IsRelocationRequired -> Relocating : Relocation \nrequired
+IsRelocationRequired -[$NOT_ACTIVE_COLOR]> Ready : Relocation not required
+Relocating -[$NOT_ACTIVE_COLOR]u> Ready : Reaches\n  destination
+Relocating -[$NOT_ACTIVE_COLOR]-> InRepair : Reaches\n workshop
 Driving --> IsCriticalFault : New fault
-Driving -[$NOT_ACTIVE_COLOR]-> MRC: Deactivation [TS]
-IsCriticalFault -[$NOT_ACTIVE_COLOR]-> MRC : Critical
+Driving -[$NOT_ACTIVE_COLOR]-> MRS: Deactivation [TS]\n\n
+IsCriticalFault -[$NOT_ACTIVE_COLOR]-> MRS : Critical
 IsCriticalFault --> DegradedDriving : Not critical
-DegradedDriving -[$NOT_ACTIVE_COLOR]> InRepair : Trip ends
+DegradedDriving -> IsDegradedRelocationRequired : \nTrip ends
+IsDegradedRelocationRequired -> Relocating : Relocation \nrequired
+IsDegradedRelocationRequired -[$NOT_ACTIVE_COLOR]> InRepair : Relocation \nnot required
 InRepair --> InReview : Approved
-MRC -[$ACTIVE_COLOR]-> Driving : Fix [TS]
-MRC -[$ACTIVE_COLOR]> DegradedDriving : Partial fix [TS]Rerouting
-MRC --> InRepair : Not fix found [TS]
-DegradedDriving -[$NOT_ACTIVE_COLOR]> MRC : New fault or \n deactivation [TS]
+MRS -[$ACTIVE_COLOR]-> Driving : Fix [TS]
+MRS -[$ACTIVE_COLOR]-> DegradedDriving : Partial fix [TS]
+MRS -d-> InRepair : No fix found [TS]  \nADS is towed
+DegradedDriving -[$NOT_ACTIVE_COLOR]-> MRS : New fault or \n deactivation [TS]
  
 note "Green arrows: Activate ADS\/\nRed arrows: Deactivate ADS\/\nBlack arrows: No ADS state change \/\n[TS]: Transition must be confirmed by user" as N1
 @enduml

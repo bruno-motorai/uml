@@ -29,7 +29,8 @@ package "Technical Supervisor App" {
     usecase UC204 as (Communicate with ADS passengers) <<  UC2.3  >>
     usecase UC205 as (Monitor ADS passengers) <<  UC2.4  >>
     usecase UC206 as (Send ADV commands) <<  UC2.5  >>
-    usecase UC207 as (Deactivate ADS) <<  UC2.6  >> #DarkSalmon
+    usecase UC207 as (Deactivate ADS) <<  UC2.6  >>
+    usecase UC208 as (Submit ADS feedback) <<  UC2.7  >>  
 }
 
 ' User connections
@@ -56,5 +57,6 @@ UC204 --> UC2 #line.dashed : <<extends>>
 UC205 --> UC2 #line.dashed : <<extends>>
 UC206 --> UC2 #line.dashed : <<extends>>
 UC207 --> UC2 #line.dashed : <<extends>>
+UC208 --> UC2 #line.dashed : <<extends>>
 
 @enduml
