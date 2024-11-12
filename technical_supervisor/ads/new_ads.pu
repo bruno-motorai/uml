@@ -1,0 +1,24 @@
+@startuml
+title New ADS in the system
+
+start
+:New ADS ready to be used;
+note left: InReview
+
+:Unique ID for ADS is generated;
+:Admin adds ADS to DB;
+
+rectangle Technical Supervisor {
+    
+    repeat :TS analyses ADS;
+        :Routine diagnoses;
+        :ADS self-checks;
+        :Errors check; 
+    repeat while (ADS ready?) is (no) not (yes)
+
+    :TS marks the ADS as ready;
+}
+stop
+note left: Ready
+
+@enduml
