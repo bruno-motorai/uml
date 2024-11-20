@@ -13,14 +13,14 @@ package "Technical Supervisor App" {
 
     ' Supervise system
     usecase UC102 as (Monitor ADS on map) <<  UC1.1  >>
-    usecase UC100 as (Approve trip start) <<  UC1.2  >> #DarkSalmon
+    usecase UC100 as (Approve trip start) <<  UC1.2  >>
     usecase UC101 as (Analyze system summary) <<  UC1.3  >>
     usecase UC104 as (Perform ADS routine tests) <<  UC1.4  >>
     usecase UC105 as (Monitor ODD) <<  UC1.5  >>
-    usecase UC106 as (Suggest trip route) << UC1.2.1 >> #DarkSalmon
+    usecase UC106 as (Suggest trip route) << UC1.2.1 >>
     usecase UC107 as (List ADS) <<  UC1.6  >>
     usecase UC108 as (Change geozone) <<  UC1.7  >>
-    usecase UC109 as (Pause availability) <<  UC1.8  >>
+    usecase UC109 as (Request leave) <<  UC1.8  >>
 
     ' Supervise ADS
     usecase UC201 as (Approve DDTM to go out of MRS) <<  UC2.1  >>

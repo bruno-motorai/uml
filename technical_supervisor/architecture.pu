@@ -22,7 +22,7 @@ node "Technical supervisor system" as ts {
 
     }
 
-    database "DB" as db {
+    database "Database" as db {
         component "ADS profile"
         component "Cases"
         component "Geozones"
@@ -46,7 +46,7 @@ ads -down-> ads_db
 ads <-up-> mqtt_broker
 mqtt_broker <--> mqtt_client
 gui -down-> rest_api
-gui -down-> ws_api
+gui <-down-> ws_api
 rest_api -d-> auth
 rest_api -d-> log_engine
 rest_api -d-> ads_db

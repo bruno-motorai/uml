@@ -14,9 +14,6 @@ package "Technical Supervisor App" {
     usecase UC6 as (Manage users) <<  UC6  >>
     usecase UC7 as (Manage user roles) <<  UC7  >>
     usecase UC8 as (Manage user permissions) <<  UC8  >>
-
-    usecase UC61 as (Assign geozones) <<  UC6.1  >>
-    usecase UC62 as (Read user logs) <<  UC6.2  >>
 }
 
 ADM1 -up-> UC1
@@ -26,8 +23,6 @@ UC3 --> UC1 #line.dashed : <<extends>>
 UC4 --> UC1 #line.dashed : <<extends>>
 UC5 --> UC1 #line.dashed : <<extends>>
 UC6 --> UC1 #line.dashed : <<extends>>
-UC61 --> UC6 #line.dashed : <<extends>>
-UC62 --> UC6 #line.dashed : <<extends>>
 UC7 --> UC1 #line.dashed : <<extends>>
 UC8 --> UC1 #line.dashed : <<extends>>
 
