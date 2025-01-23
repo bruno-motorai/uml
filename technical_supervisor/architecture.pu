@@ -4,23 +4,26 @@ skinparam ranksep 5
 
 scale 1.0
 
-node "Technical supervisor system" as ts {
+node "Clients" as client_side {
     component "GUI" as gui
+    component "GUI2" as gui2
+}
 
-    node "Backend" as backend {
+node "Technical supervisor system" as ts {
+    rectangle "Public APIs" {
+            component "REST API" as rest_api
+            component "Websockets/WebRTC API" as ws_api
+            component "ORM" as orm
+        }
+
+    rectangle "Backend services" as backend {
         component "Auth module" as auth
         component "Assignment engine" as assignment_engine
         component "Notification engine" as notification_engine
         component "Logging engine" as log_engine
-        component "MQTT client" as mqtt_client
-
-
-        package "APIs" {
-            component "REST API" as rest_api
-            component "Websockets API" as ws_api
-        }
-
     }
+
+    component "MQTT client" as mqtt_client
 
     database "Database" as db {
         component "ADS profile"
@@ -34,23 +37,32 @@ node "Technical supervisor system" as ts {
     }
 }
 
-node "ADS" as ads
 
-component "MQTT broker" as mqtt_broker
-
-cloud "S3 storage" {
-    database "ADS Logs" as ads_db
+node "ADS1" as ads_node { 
+    node "ADS" as ads1
+    database "Raw sensor logs (blackbox)" as raw_logs_ads1
+    database "Node logs (main board)" as logs_ads1
 }
 
-ads -down-> ads_db
-ads <-up-> mqtt_broker
-mqtt_broker <--> mqtt_client
-gui -down-> rest_api
-gui <-down-> ws_api
-rest_api -d-> auth
-rest_api -d-> log_engine
-rest_api -d-> ads_db
-rest_api -d-> db
+node "ADS2" as ads_node2 { 
+    node "ADS" as ads2
+    database "Raw sensor logs (blackbox)" as raw_logs_ads2
+    database "Node logs (main board)" as logs_ads2
+}
+
+ads1 -down-> raw_logs_ads1
+ads1 -down-> logs_ads1
+ads2 -down-> raw_logs_ads2
+ads2 -down-> logs_ads2
+ads1 <-d-> mqtt_client
+ads2 <-u-> mqtt_client
+client_side -down-> rest_api
+client_side <-down-> ws_api
+rest_api --> auth
+rest_api --> log_engine
+rest_api -u-> orm
+ws_api -u-> orm
+orm -d-> db
 ws_api -d-> assignment_engine
 notification_engine -r-> ws_api
 ws_api <-d-> mqtt_client
