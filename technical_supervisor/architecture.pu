@@ -23,29 +23,40 @@ node "Technical supervisor system" as ts {
         component "Logging engine" as log_engine
     }
 
-    component "MQTT client" as mqtt_client
+    component "ADS client" as ads_client
 
     database "Database" as db {
-        component "ADS profile"
-        component "Cases"
         component "Geozones"
+        component "Landmakrs"
         component "Users"
         component "User roles"
         component "User permissions"
         component "User logs"
+        component "User absences"
         component "Notifications"
+        component "ADS"
+        component "ADS sensors"
+        component "ADS cases"
+        component "ADS case events"
+        component "ADS trips"
+        component "ADS stats"
+        component "ADS tests"
     }
 }
 
 
 node "ADS1" as ads_node { 
-    node "ADS" as ads1
+    node "ADS" as ads1 {
+        component "BackendNode" as ads_backend
+    }
     database "Raw sensor logs (blackbox)" as raw_logs_ads1
     database "Node logs (main board)" as logs_ads1
 }
 
 node "ADS2" as ads_node2 { 
-    node "ADS" as ads2
+    node "ADS" as ads2 {
+        component "BackendNode" as ads_backend2
+    }
     database "Raw sensor logs (blackbox)" as raw_logs_ads2
     database "Node logs (main board)" as logs_ads2
 }
@@ -54,8 +65,8 @@ ads1 -down-> raw_logs_ads1
 ads1 -down-> logs_ads1
 ads2 -down-> raw_logs_ads2
 ads2 -down-> logs_ads2
-ads1 <-d-> mqtt_client
-ads2 <-u-> mqtt_client
+ads_backend <-d-> ads_client
+ads_backend2 <-u-> ads_client
 client_side -down-> rest_api
 client_side <-down-> ws_api
 rest_api --> auth
@@ -65,5 +76,6 @@ ws_api -u-> orm
 orm -d-> db
 ws_api -d-> assignment_engine
 notification_engine -r-> ws_api
-ws_api <-d-> mqtt_client
+ws_api <-d-> ads_client
+rest_api <-d-> ads_client
 @enduml
