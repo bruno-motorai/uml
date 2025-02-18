@@ -4,10 +4,7 @@ skinparam ranksep 5
 
 scale 1.0
 
-node "Clients" as client_side {
-    component "GUI" as gui
-    component "GUI2" as gui2
-}
+component "TechincalSupervisor GUI" as gui
 
 node "Technical supervisor system" as ts {
     rectangle "Public APIs" {
@@ -46,29 +43,29 @@ node "Technical supervisor system" as ts {
 
 
 node "ADS1" as ads_node { 
-    node "ADS" as ads1 {
-        component "BackendNode" as ads_backend
+    node "ROS" as ads1 {
+        component "BackendNode" as ads_backend_node
     }
     database "Raw sensor logs (blackbox)" as raw_logs_ads1
     database "Node logs (main board)" as logs_ads1
+    component "SafetyDriver GUI" as safety_driver_gui1
 }
 
 node "ADS2" as ads_node2 { 
-    node "ADS" as ads2 {
-        component "BackendNode" as ads_backend2
+    node "ROS" as ads2 {
+        component "BackendNode" as ads2_backend_node
     }
     database "Raw sensor logs (blackbox)" as raw_logs_ads2
     database "Node logs (main board)" as logs_ads2
+    component "SafetyDriver GUI" as safety_driver_gui2
 }
 
 ads1 -down-> raw_logs_ads1
 ads1 -down-> logs_ads1
 ads2 -down-> raw_logs_ads2
 ads2 -down-> logs_ads2
-ads_backend <-d-> ads_client
-ads_backend2 <-u-> ads_client
-client_side -down-> rest_api
-client_side <-down-> ws_api
+gui -down-> rest_api
+gui <-down-> ws_api
 rest_api --> auth
 rest_api --> log_engine
 rest_api -u-> orm
@@ -78,4 +75,9 @@ ws_api -d-> assignment_engine
 notification_engine -r-> ws_api
 ws_api <-d-> ads_client
 rest_api <-d-> ads_client
+
+ads_backend_node <-d-> ads_client
+ads2_backend_node <-u-> ads_client
+safety_driver_gui2 -l-> ads2_backend_node
+safety_driver_gui1 -> ads_backend_node
 @enduml

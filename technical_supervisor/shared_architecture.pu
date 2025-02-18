@@ -1,0 +1,75 @@
+@startuml
+skinparam nodesep 10
+skinparam ranksep 5
+
+scale 1.0
+
+
+node "Technical supervisor shared system" as ts #SeaGreen {
+    rectangle "APIs" {
+        component "REST API" as rest_api
+        component "Websockets/WebRTC API" as ws_api
+    }
+
+    component "ORM" as orm
+
+    component "TechincalSupervisor GUI" as gui
+
+    database "Database" as db {
+        component "Geozones"
+        component "Landmakrs"
+        component "Users"
+        component "User roles"
+        component "User permissions"
+        component "User logs"
+        component "User absences"
+        component "Notifications"
+        component "ADS"
+        component "ADS sensors"
+        component "ADS cases"
+        component "ADS case events"
+        component "ADS trips"
+        component "ADS stats"
+        component "ADS tests"
+    }
+}
+
+skinparam componentStyle rectangle
+component "MotorAI TS Services" as backend {
+    component "Auth module" as auth
+    component "Assignment engine" as assignment_engine
+    component "Notification engine" as notification_engine
+    component "Logging engine" as log_engine
+    component "ADS client" as ads_client
+}
+
+node "ADS1" as ads_node {
+
+    node "ROS" as ads1 {
+        component "BackendNode" as ads_backend_node
+        component "ADS System" as ads_system
+    }
+    database "Raw sensor logs (blackbox)" as raw_logs_ads1
+    database "Node logs (main board)" as logs_ads1
+    component "SafetyDriver GUI" as safety_driver_gui1
+}
+
+ads1 -down-> raw_logs_ads1
+ads1 -down-> logs_ads1
+gui -down-> rest_api
+gui <-down-> ws_api
+
+rest_api -> orm
+ws_api -> orm
+orm -> db
+rest_api --> log_engine
+rest_api --> auth
+ws_api -u-> assignment_engine
+ws_api <- notification_engine
+ws_api <-> ads_client
+rest_api <-> ads_client
+
+ads_backend_node -> ads_system
+ads_backend_node <-d-> ads_client
+safety_driver_gui1 -> ads_backend_node
+@enduml
