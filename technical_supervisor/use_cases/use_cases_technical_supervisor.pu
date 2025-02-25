@@ -3,61 +3,66 @@ title Technical supervisor use cases
 
 left to right direction
 
-actor :Technical\nSupervisor: as TS1
+actor :Technical\nSupervisor: as USER
 
 package "Technical Supervisor App" {
-    usecase UC4 as (Login) <<  UC4  >>
-    usecase UC5 as (Log out) <<  UC5  >>
-    usecase UC1 as (MONITOR)<<  UC1  >>
-    usecase UC2 as (ACT) <<  UC2  >>
+    usecase TS1 as (MONITOR)<<  TS1  >>
+    usecase TS2 as (ACT) <<  TS2  >>
+    usecase TS3 as (Receive notifications) <<  TS3  >>
+    usecase TS4 as (Login) <<  TS4  >>
+    usecase TS5 as (Log out) <<  TS5  >>
 
-    ' Supervise system
-    usecase UC102 as (Monitor ADS on map) <<  UC1.1  >>
-    usecase UC100 as (Approve trip start) <<  UC1.2  >>
-    usecase UC101 as (Analyze system summary) <<  UC1.3  >>
-    usecase UC104 as (Perform ADS routine tests) <<  UC1.4  >>
-    usecase UC105 as (Monitor ODD) <<  UC1.5  >>
-    usecase UC106 as (Suggest trip route) << UC1.2.1 >>
-    usecase UC107 as (List ADS) <<  UC1.6  >>
-    usecase UC108 as (Change geozone) <<  UC1.7  >>
-    usecase UC109 as (Request leave) <<  UC1.8  >>
+    usecase TS301 as (Mark notifications as read) <<  TS3.1  >>
 
-    ' Supervise ADS
-    usecase UC201 as (Approve DDTM to go out of MRS) <<  UC2.1  >>
-    usecase UC202 as (Suggest DDTM) <<  UC2.1.1  >>
-    usecase UC203 as (Mark ADS for workshop) <<  UC2.2  >>
-    usecase UC204 as (Communicate with ADS passengers) <<  UC2.3  >>
-    usecase UC205 as (Monitor ADS passengers) <<  UC2.4  >>
-    usecase UC206 as (Send ADV commands) <<  UC2.5  >>
-    usecase UC207 as (Deactivate ADS) <<  UC2.6  >>
-    usecase UC208 as (Submit ADS feedback) <<  UC2.7  >>  
+    ' Monitor
+    usecase TS102 as (Monitor ADS) <<  TS1.1  >>
+    usecase TS100 as (Approve trip start) <<  TS1.2  >>
+    usecase TS107 as (List ADS) <<  TS1.1.1  >>
+    usecase TS101 as (Supervise ADS) <<  TS1.1.2  >>
+    usecase TS104 as (Perform ADS routine tests) <<  TS1.3  >>
+    usecase TS105 as (Monitor ODD) <<  TS1.4  >>
+    usecase TS106 as (Suggest trip route) << TS1.2.1 >>
+    usecase TS108 as (Change geozone) <<  TS1.6  >>
+    usecase TS109 as (Request leave) <<  TS1.7  >>
+
+    ' Act
+    usecase TS201 as (Approve DDTM to go out of MRS) <<  TS2.1  >>
+    usecase TS202 as (Suggest DDTM) <<  TS2.1.1  >>
+    usecase TS203 as (Mark ADS for workshop) <<  TS2.2  >>
+    usecase TS204 as (Communicate with ADS passengers) <<  TS2.3  >>
+    usecase TS205 as (Monitor ADS passengers) <<  TS2.4  >>
+    usecase TS206 as (Send ADV commands) <<  TS2.5  >>
+    usecase TS207 as (Deactivate ADS) <<  TS2.6  >>
+    usecase TS208 as (Submit ADS feedback) <<  TS2.7  >>  
 }
 
-' User connections
-TS1 -up-> UC4
-UC2 -> UC4 #line.dashed : <<extends>> 
-UC1 ---> UC4 : <<includes>> 
-UC5 --> UC4 : <<includes>>
+' General use cases
+USER -up-> TS4
+TS2 -> TS4 #line.dashed : <<extends>> 
+TS1 ---> TS4 : <<includes>> 
+TS5 --> TS4 : <<includes>>
+TS3 -> TS4 #line.dashed : <<extends>>
+TS301 -> TS3 #line.dashed : <<extends>>
 
-' Supervise system
-UC100 --> UC1 #line.dashed : <<extends>>
-UC106 --> UC100 #line.dashed : <<extends>>
-UC101 --> UC1 #line.dashed : <<extends>>
-UC102 --> UC1 : <<includes>>
-UC104 --> UC1 #line.dashed : <<extends>>
-UC105 --> UC1 #line.dashed : <<extends>>
-UC107 --> UC1 #line.dashed : <<extends>>
-UC108 -d-> UC1 #line.dashed : <<extends>>
-UC109 --> UC1 #line.dashed : <<extends>>
+' Monitor
+TS100 --> TS1 #line.dashed : <<extends>>
+TS106 --> TS100 #line.dashed : <<extends>>
+TS101 --> TS102 #line.dashed : <<extends>>
+TS102 --> TS1 : <<includes>>
+TS104 --> TS1 #line.dashed : <<extends>>
+TS105 --> TS1 #line.dashed : <<extends>>
+TS107 --> TS102 #line.dashed : <<extends>>
+TS108 -d-> TS1 #line.dashed : <<extends>>
+TS109 --> TS1 #line.dashed : <<extends>>
 
-' Supervise ADS
-UC201 --> UC2 #line.dashed : <<extends>>
-UC202 --> UC201 #line.dashed : <<extends>>
-UC203 --> UC2 #line.dashed : <<extends>>
-UC204 --> UC2 #line.dashed : <<extends>>
-UC205 --> UC2 #line.dashed : <<extends>>
-UC206 --> UC2 #line.dashed : <<extends>>
-UC207 --> UC2 #line.dashed : <<extends>>
-UC208 --> UC2 #line.dashed : <<extends>>
+' Act
+TS201 --> TS2 #line.dashed : <<extends>>
+TS202 --> TS201 #line.dashed : <<extends>>
+TS203 --> TS2 #line.dashed : <<extends>>
+TS204 --> TS2 #line.dashed : <<extends>>
+TS205 --> TS2 #line.dashed : <<extends>>
+TS206 --> TS2 #line.dashed : <<extends>>
+TS207 --> TS2 #line.dashed : <<extends>>
+TS208 --> TS2 #line.dashed : <<extends>>
 
 @enduml

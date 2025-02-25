@@ -6,24 +6,29 @@ left to right direction
 actor :Admin\nSupervisor: as ADM1
 
 package "Technical Supervisor App" {
-    usecase UC1 as (Login) <<  UC1  >>
-    usecase UC2 as (Log out) <<  UC2  >>
-    usecase UC3 as (Manage ADS) <<  UC3  >>
-    usecase UC4 as (Manage ODD) <<  UC4  >>
-    usecase UC5 as (Manage geozones) <<  UC5  >>
-    usecase UC6 as (Manage users) <<  UC6  >>
-    usecase UC7 as (Manage user roles) <<  UC7  >>
-    usecase UC8 as (Manage user permissions) <<  UC8  >>
+    usecase AS1 as (Login) <<  AS1  >>
+    usecase AS2 as (Log out) <<  AS2  >>
+    usecase AS3 as (Manage ADS) <<  AS3  >>
+    usecase AS4 as (Manage ODD) <<  AS4  >>
+    usecase AS5 as (Manage geozones) <<  AS5  >>
+    usecase AS6 as (Manage users) <<  AS6  >>
+    usecase AS7 as (Manage user roles) <<  AS7  >>
+    usecase AS8 as (Manage user permissions) <<  AS8  >>
+
+    usecase AS501 as (Manage landmarks) <<  AS5.1  >>
+    usecase AS9 as (Resolve absence requests) <<  AS9  >>
 }
 
-ADM1 -up-> UC1
+ADM1 -up-> AS1
 
-UC2 -> UC1 : <<includes>> 
-UC3 --> UC1 #line.dashed : <<extends>>
-UC4 --> UC1 #line.dashed : <<extends>>
-UC5 --> UC1 #line.dashed : <<extends>>
-UC6 --> UC1 #line.dashed : <<extends>>
-UC7 --> UC1 #line.dashed : <<extends>>
-UC8 --> UC1 #line.dashed : <<extends>>
+AS2 -> AS1 : <<includes>> 
+AS3 --> AS1 #line.dashed : <<extends>>
+AS4 --> AS1 #line.dashed : <<extends>>
+AS5 --> AS1 #line.dashed : <<extends>>
+AS6 --> AS1 #line.dashed : <<extends>>
+AS7 --> AS1 #line.dashed : <<extends>>
+AS8 --> AS1 #line.dashed : <<extends>>
+AS501 -d-> AS5 #line.dashed : <<extends>>
+AS9 --> AS1 #line.dashed : <<extends>>
 
 @enduml
