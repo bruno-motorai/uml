@@ -19,12 +19,15 @@ node "Technical supervisor system" as ts {
         component "Notification engine" as notification_engine
         component "Logging engine" as log_engine
         component "ADS client" as ads_client
+        component "Map database sync" as map_sync
     }
 
 
     database "Database" as db {
         component "Geozones"
         component "Landmakrs"
+        component "Danger zones"
+        component "ODD"
         component "Users"
         component "User roles"
         component "User permissions"
@@ -36,8 +39,14 @@ node "Technical supervisor system" as ts {
         component "ADS cases"
         component "ADS case events"
         component "ADS trips"
+        component "ADS trips events"
         component "ADS stats"
         component "ADS tests"
+    }
+
+    database "Map data" as map_db {
+        component "Imagery"
+        component "Roads and projections"
     }
 }
 
@@ -50,22 +59,14 @@ node "ADS1" as ads_node {
     database "Node logs (main board)" as logs_ads1
     component "SafetyDriver GUI" as safety_driver_gui1
     component "Passenger GUI" as passenger_gui1
-}
 
-node "ADS2" as ads_node2 { 
-    node "ROS" as ads2 {
-        component "BackendNode" as ads2_backend_node
-    }
-    database "Raw sensor logs (blackbox)" as raw_logs_ads2
-    database "Node logs (main board)" as logs_ads2
-    component "SafetyDriver GUI" as safety_driver_gui2
-    component "Passenger GUI" as passenger_gui2
+    database "Map data" as map_db_ads 
 }
 
 ads1 -down-> raw_logs_ads1
 ads1 -down-> logs_ads1
-ads2 -down-> raw_logs_ads2
-ads2 -down-> logs_ads2
+' ads2 -down-> raw_logs_ads2
+' ads2 -down-> logs_ads2
 gui -down-> rest_api
 gui <-down-> ws_api
 rest_api --> auth
@@ -77,11 +78,15 @@ ws_api -d-> assignment_engine
 notification_engine -r-> ws_api
 ws_api <-d-> ads_client
 rest_api <-d-> ads_client
+rest_api ---> map_db
 
 ads_backend_node <-d-> ads_client
-ads2_backend_node <-u-> ads_client
-safety_driver_gui2 -l-> ads2_backend_node
-safety_driver_gui1 -> ads_backend_node
-passenger_gui2 -> ads2_backend_node
+' safety_driver_gui2 -l-> ads2_backend_node
+safety_driver_gui1 -d-> ads_backend_node
+safety_driver_gui1 -> map_db_ads
+' passenger_gui2 -> ads2_backend_node
 passenger_gui1 -d-> ads_backend_node
+passenger_gui1 -d-> map_db_ads
+
+map_sync -> map_db_ads
 @enduml
