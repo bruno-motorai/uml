@@ -4,14 +4,16 @@ skinparam ranksep 5
 
 scale 1.0
 
-component "Supervisors" as gui <<guiComponent>>
+node "Control center" as control_center {
+    component "Supervisors" as gui <<guiComponent>>
+}
 
 node "Technical supervisor system" as ts {
     rectangle "Public APIs" {
-            component "REST API" as rest_api
-            component "Websockets/WebRTC API" as ws_api
-            component "ORM" as orm
-        }
+        component "REST API" as rest_api
+        component "Websockets/WebRTC API" as ws_api
+        component "ORM" as orm
+    }
 
     rectangle "Backend services" as backend {
         component "Auth module" as auth
@@ -19,7 +21,8 @@ node "Technical supervisor system" as ts {
         component "Notification engine" as notification_engine
         component "Logging engine" as log_engine
         component "ADS client" as ads_client
-        component "Map database sync" as map_sync
+        component "Map data sync" as map_sync
+        component "Sensors sync" as sensors_sync
     }
 
 
@@ -51,13 +54,14 @@ node "Technical supervisor system" as ts {
 }
 
 
-node "ADS1" as ads_node { 
+node "ADS1" as ads_node {
+
     node "ROS" as ads1 {
         component "BackendNode" as ads_backend_node
     }
     database "Raw sensor logs (blackbox)" as raw_logs_ads1
     database "Node logs (main board)" as logs_ads1
-    component "SafetyDriver" as safety_driver_gui1 <<guiComponent>> 
+    component "SafetyDriver" as safety_driver_gui1 <<guiComponent>>
     component "Passenger" as passenger_gui1 << guiComponent >>
 
     database "Map data" as map_db_ads
@@ -80,11 +84,15 @@ ws_api <-d-> ads_client
 rest_api <-d-> ads_client
 gui -u-> map_db
 
+rest_api <-> sensors_sync
+sensors_sync <--> ads_client
+assignment_engine <--> ads_client
+
 ads_backend_node <-d-> ads_client
-' safety_driver_gui2 -l-> ads2_backend_node
-safety_driver_gui1 -d-> ads_backend_node
+
+safety_driver_gui1 -u-> ads_backend_node
 safety_driver_gui1 -> map_db_ads
-' passenger_gui2 -> ads2_backend_node
+
 passenger_gui1 -d-> ads_backend_node
 passenger_gui1 -d-> map_db_ads
 
@@ -92,11 +100,11 @@ map_sync ---> map_db_ads
 map_sync -u-> map_db
 
 <style>
- .guiComponent {
-     BackgroundColor LightSkyBlue
-     FontColor Black
-     ComponentBorderColor LightSlateGray
-     RoundCorner 10
- }
+.guiComponent {
+    BackgroundColor LightSkyBlue
+    FontColor Black
+    ComponentBorderColor LightSlateGray
+    RoundCorner 10
+}
 </style>
 @enduml
