@@ -27,8 +27,8 @@ package "Technical Supervisor App" {
     usecase TS204 as (Communicate with ADS passengers) <<  TS4.1.3  >>
     usecase TS205 as (Monitor ADS passengers) <<  TS4.1.4  >>
     usecase TS206 as (Send ADV commands) <<  TS4.1.5  >>
-    usecase TS207 as (Deactivate ADS) <<  TS4.1.6  >>
-    usecase TS208 as (Submit ADS feedback) <<  TS4.1.7  >>  
+    usecase TS207 as (Deactivate ADS) <<  TS4.2  >>
+    usecase TS208 as (Submit ADS feedback) <<  TS4.3  >>  
 }
 
 ' General use cases
@@ -53,8 +53,8 @@ TS203 --> TS401 #line.dashed : <<extends>>
 TS204 --> TS401 #line.dashed : <<extends>>
 TS205 --> TS401 #line.dashed : <<extends>>
 TS206 --> TS401 #line.dashed : <<extends>>
-TS207 --> TS401 #line.dashed : <<extends>>
-TS208 --> TS401 #line.dashed : <<extends>>
+TS207 --> TS4 #line.dashed : <<extends>>
+TS208 --> TS4 #line.dashed : <<extends>>
 TS20101 --> TS201 #line.dashed : <<extends>>
 
 @enduml
