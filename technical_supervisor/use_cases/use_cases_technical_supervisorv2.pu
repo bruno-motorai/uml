@@ -15,20 +15,21 @@ package "Technical Supervisor App" {
     usecase TS401 as (Supervise ADS) <<  TS4.1  >>
     usecase TS5 as (Approve trip start) <<  TS5  >>
     usecase TS501 as (Suggest trip route) << TS5.1 >>
-    usecase TS6 as (Perform ADS routine tests) <<  TS6  >>
-    usecase TS7 as (Manage ODD) <<  TS7  >>
-    usecase TS8 as (Change geozone) <<  TS8  >>
-    usecase TS9 as (Request leave) <<  TS9  >>
+    usecase TS6 as (Add danger zone) <<  TS6  >>
+    usecase TS8 as (Change geozone) <<  TS7  >>
+    usecase TS9 as (Request leave) <<  TS8  >>
 
     ' Act
     usecase TS201 as (Approve DDTM to go out of MRS) <<  TS4.1.1  >>
     usecase TS20101 as (Suggest DDTM) <<  TS4.1.1.1  >>
     usecase TS203 as (Mark ADS for workshop) <<  TS4.1.2  >>
-    usecase TS204 as (Communicate with ADS passengers) <<  TS4.1.3  >>
-    usecase TS205 as (Monitor ADS passengers) <<  TS4.1.4  >>
-    usecase TS206 as (Send ADV commands) <<  TS4.1.5  >>
+    usecase TS206 as (Send ADV commands) <<  TS4.1.3  >>
     usecase TS207 as (Deactivate ADS) <<  TS4.2  >>
     usecase TS208 as (Submit ADS feedback) <<  TS4.3  >>  
+    usecase TS209 as (Perform ADS routine tests) <<  TS4.4  >>
+    usecase TS204 as (Call ADS passengers) <<  TS4.5  >>
+    usecase TS205 as (Monitor ADS passengers) <<  TS4.6  >>
+    
 }
 
 ' General use cases
@@ -42,7 +43,6 @@ TS4 --> TS1 : <<includes>>
 TS5 --> TS1 #line.dashed : <<extends>>
 TS501 --> TS5 #line.dashed : <<extends>>
 TS6 --> TS1 #line.dashed : <<extends>>
-TS7 --> TS1 #line.dashed : <<extends>>
 TS8 --> TS1 #line.dashed : <<extends>>
 TS9 --> TS1 #line.dashed : <<extends>>
 TS401 --> TS4 #line.dashed : <<extends>>
@@ -50,11 +50,12 @@ TS401 --> TS4 #line.dashed : <<extends>>
 ' Act
 TS201 --> TS401 #line.dashed : <<extends>>
 TS203 --> TS401 #line.dashed : <<extends>>
-TS204 --> TS401 #line.dashed : <<extends>>
-TS205 --> TS401 #line.dashed : <<extends>>
+TS204 --> TS4 #line.dashed : <<extends>>
+TS205 --> TS4 #line.dashed : <<extends>>
 TS206 --> TS401 #line.dashed : <<extends>>
 TS207 --> TS4 #line.dashed : <<extends>>
 TS208 --> TS4 #line.dashed : <<extends>>
+TS209 --> TS4 #line.dashed : <<extends>>
 TS20101 --> TS201 #line.dashed : <<extends>>
 
 @enduml
