@@ -34,7 +34,6 @@ node "Technical supervisor system" as ts {
         component "Users"
         component "User roles"
         component "User permissions"
-        component "User logs"
         component "User absences"
         component "Notifications"
         component "ADS"
@@ -56,19 +55,49 @@ node "Technical supervisor system" as ts {
 
 node "ADS1" as ads_node {
 
-    node "ROS" as ads1 {
-        component "BackendNode" as ads_backend_node
+    node "ROS ecosystem" as ros_system {
+        component "Orchestrator" as ads_orchestrator_node
+        component "Manager" as ads_manager_node
     }
+
+    node {
+        component "SafetyDriver" as safety_driver_gui1 <<guiComponent>>
+    }
+
+    node {
+
+        component "Passenger" as passenger_gui1 << guiComponent >>
+    }
+
     database "Raw sensor logs (blackbox)" as raw_logs_ads1
     database "Node logs (main board)" as logs_ads1
-    component "SafetyDriver" as safety_driver_gui1 <<guiComponent>>
-    component "Passenger" as passenger_gui1 << guiComponent >>
-
     database "Map data" as map_db_ads
+
+
+    note bottom of ads_orchestrator_node
+        Reacts to errors from other nodes
+    end note
+
+    note top of ads_manager_node
+        Includes master start, shutdown, and restart
+    end note
 }
 
-ads1 -down-> raw_logs_ads1
-ads1 -down-> logs_ads1
+
+node "Historic logs" as logs_system {
+    database "ADS" as ads_logs_db {
+        component "ADS Logs"
+        component "Sensor Logs"
+    }
+
+    database "Technical Supervisor" as ts_logs_db {
+        component "User actions"
+    }
+}
+
+raw_logs_ads1 <-d- ros_system
+logs_ads1 <-d- ros_system
+ros_system -u--> ads_logs_db
 ' ads2 -down-> raw_logs_ads2
 ' ads2 -down-> logs_ads2
 gui -down-> rest_api
@@ -88,13 +117,15 @@ rest_api <-> sensors_sync
 sensors_sync <--> ads_client
 assignment_engine <--> ads_client
 
-ads_backend_node <-d-> ads_client
+ads_orchestrator_node <-d-> ads_client : "Get errors and state of ADS"
+ads_manager_node <-d-> ads_client : "Only for restart"
 
-safety_driver_gui1 -u-> ads_backend_node
-safety_driver_gui1 -> map_db_ads
+safety_driver_gui1 -u-> ads_manager_node
 
-passenger_gui1 -d-> ads_backend_node
+passenger_gui1 -d-> ads_orchestrator_node
 passenger_gui1 -d-> map_db_ads
+
+log_engine -u-> ts_logs_db
 
 map_sync ---> map_db_ads
 map_sync -u-> map_db
