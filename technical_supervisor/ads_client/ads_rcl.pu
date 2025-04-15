@@ -1,0 +1,21 @@
+@startuml
+skinparam nodesep 10
+skinparam ranksep 5
+
+scale 1.0
+
+node "Technical supervisor system" as ts {
+    rectangle "Backend services" as backend {
+        component "RCL implementation" as ads_client
+    }
+}
+
+node "ADS1" as ads { 
+    node "ROS" as ads1 {
+        component "Orchestrator" as ads_orchestrator
+    }
+}
+
+ads_client <-> ads_orchestrator
+
+@enduml
