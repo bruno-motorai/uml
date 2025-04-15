@@ -52,21 +52,30 @@ node "Technical supervisor system" as ts {
     }
 }
 
+node {
+    component "MQTT Broker" as mqtt_broker
+}
 
 node "ADS1" as ads_node {
+
+    node sensor_rack {
+    }
 
     node "ROS ecosystem" as ros_system {
         component "Orchestrator" as ads_orchestrator_node
         component "Manager" as ads_manager_node
+        component "MQTT bridge" as ads_mqtt_bridge_node
+        component "Position handler" as ads_position_node
+        component "Command handler" as ads_command_node
+        component "Sensor stream" as ads_sensor_stream_node
     }
 
     node {
-        component "SafetyDriver" as safety_driver_gui1 <<guiComponent>>
+        component "SafetyDriver" as safety_driver_gui <<guiComponent>>
     }
 
     node {
-
-        component "Passenger" as passenger_gui1 << guiComponent >>
+        component "Passenger" as passenger_gui << guiComponent >>
     }
 
     database "Raw sensor logs (blackbox)" as raw_logs_ads1
@@ -80,6 +89,22 @@ node "ADS1" as ads_node {
 
     note top of ads_manager_node
         Includes master start, shutdown, and restart
+    end note
+
+    note left of ads_command_node
+        Includes services for the ADS:
+        - Restart
+        - Get version
+        - Sync sensors
+        - Set to workshop
+        - Deactivate
+        - Activate
+        - Send command
+        - Input route suggestions
+        - Enable sensor stream
+        - Get state (with metadata)
+        - Get autonomous tests outcome
+        - Get last synchronized tests outcome
     end note
 }
 
@@ -98,8 +123,6 @@ node "Historic logs" as logs_system {
 raw_logs_ads1 <-d- ros_system
 logs_ads1 <-d- ros_system
 ros_system -u--> ads_logs_db
-' ads2 -down-> raw_logs_ads2
-' ads2 -down-> logs_ads2
 gui -down-> rest_api
 gui <-down-> ws_api
 rest_api --> auth
@@ -117,13 +140,20 @@ rest_api <-> sensors_sync
 sensors_sync <--> ads_client
 assignment_engine <--> ads_client
 
-ads_orchestrator_node <-d-> ads_client : "Get errors and state of ADS"
-ads_manager_node <-d-> ads_client : "Only for restart"
+ads_orchestrator_node <-d-> ads_mqtt_bridge_node : "Live ADS logs"
+ads_manager_node <-d-> ads_command_node : "Restart ADS"
+ads_sensor_stream_node <-d-> ads_command_node : "Sensor stream"
+ads_mqtt_bridge_node <-d-> mqtt_broker
+mqtt_broker <-d-> ads_client
+ads_mqtt_bridge_node <-u--> ads_position_node : "Live ADS and trip"
+ads_mqtt_bridge_node <-u--> ads_command_node
+ads_mqtt_bridge_node  <-u--> sensor_rack : "Live sensor logs"
 
-safety_driver_gui1 -u-> ads_manager_node
+safety_driver_gui -u-> ads_manager_node
+safety_driver_gui -u-> ads_orchestrator_node
 
-passenger_gui1 -d-> ads_orchestrator_node
-passenger_gui1 -d-> map_db_ads
+' passenger_gui -d-> ads_orchestrator_node
+passenger_gui -d-> map_db_ads
 
 log_engine -u-> ts_logs_db
 
